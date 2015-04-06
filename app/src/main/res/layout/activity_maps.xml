@@ -1,0 +1,63 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="?android:selectableItemBackground">>
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/map"
+        tools:context="com.avismara.locsaver.activities.MapsActivity"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true" />
+
+
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:text="New Button"
+            android:id="@+id/button"
+            android:src="@drawable/ic_action_save"
+            android:background="@drawable/ripple_selector"
+            android:layout_gravity="center"
+            android:stateListAnimator="@anim/button_elevation"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="50dp"
+            android:onClick="onSaveClicked"/>
+
+
+
+
+
+    <AutoCompleteTextView
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:hint="Search"
+        android:textColorHint="#565051"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:id="@+id/autoCompleteTextView"
+        android:background="@drawable/autocomplete_border"
+        android:elevation="10dp"
+        android:drawableLeft="@drawable/ic_search_gray"
+        android:drawablePadding="10dp"
+        android:paddingLeft="10dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
+
+

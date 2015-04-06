@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name = "application_base_color">#F25E5E</color>
+    <color name= "button_pressed_color">#D05E5E</color>
+</resources>
