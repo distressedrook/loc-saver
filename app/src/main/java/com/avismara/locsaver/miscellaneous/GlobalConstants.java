@@ -1,4 +1,4 @@
-package com.avismara.locsaver.utils;
+package com.avismara.locsaver.miscellaneous;
 
 /**
  * Created by Avismara on 03/04/15.

@@ -1,4 +1,4 @@
-package com.avismara.locsaver.utils;
+package com.avismara.locsaver.miscellaneous;
 
 import com.avismara.locsaver.entities.LocationInfoEntity;
 

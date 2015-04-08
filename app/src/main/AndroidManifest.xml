@@ -42,7 +42,7 @@
         </activity>
 
         <service
-            android:name=".utils.SwipeKillDetectorService"
+            android:name=".miscellaneous.SwipeKillDetectorService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="false" >
@@ -51,6 +51,10 @@
         <activity
             android:name=".activities.SavedLocationsActivity"
             android:label="@string/title_activity_saved_locations" >
+        </activity>
+        <activity
+            android:name=".activities.ShowLocationActivity"
+            android:label="@string/title_activity_show_location" >
         </activity>
     </application>
 

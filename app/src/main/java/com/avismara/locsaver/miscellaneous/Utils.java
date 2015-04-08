@@ -1,4 +1,4 @@
-package com.avismara.locsaver.utils;
+package com.avismara.locsaver.miscellaneous;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.avismara.locsaver.entities.LocationInfoEntity;
@@ -69,12 +68,6 @@ public class Utils {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static int dpToPx(int dp,Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        return px;
     }
 
 }

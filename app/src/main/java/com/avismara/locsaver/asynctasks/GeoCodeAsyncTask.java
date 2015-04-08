@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.avismara.locsaver.activities.MapsActivity;
 import com.avismara.locsaver.entities.LocationInfoEntity;
-import com.avismara.locsaver.utils.GlobalConstants;
+import com.avismara.locsaver.miscellaneous.GlobalConstants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,9 +24,7 @@ public class GeoCodeAsyncTask extends AsyncTask<LocationInfoEntity,Void,Location
     private static final String LOG_TAG = "GetLatLongAsyncTask";
 
 
-    private double latitude;
-    private double longitude;
-    private String placeId;
+
     private MapsActivity mapsActivity;
 
     public GeoCodeAsyncTask(MapsActivity mapsActivity){

@@ -2,10 +2,10 @@ package com.avismara.locsaver.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.media.Rating;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,11 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.avismara.locsaver.R;
+import com.avismara.locsaver.activities.MapsActivity;
+import com.avismara.locsaver.activities.SavedLocationsActivity;
+import com.avismara.locsaver.activities.ShowLocationActivity;
 import com.avismara.locsaver.asynctasks.LoadImageAsyncTask;
 import com.avismara.locsaver.entities.LocationInfoEntity;
-import com.avismara.locsaver.utils.GlobalConstants;
-import com.avismara.locsaver.utils.GlobalVariables;
-import com.avismara.locsaver.utils.Utils;
+import com.avismara.locsaver.miscellaneous.GlobalConstants;
+import com.avismara.locsaver.miscellaneous.GlobalVariables;
+import com.avismara.locsaver.miscellaneous.MapOnClickListener;
 
 
 import java.util.ArrayList;
@@ -30,22 +33,22 @@ import java.util.Iterator;
  */
 public class SavedLocationsAdapter extends RecyclerView.Adapter<SavedLocationsAdapter.CurrentViewHolder> {
 
-    public ArrayList<LocationInfoEntity> getmDataSet() {
-        return mDataSet;
-    }
 
 
 
     private ArrayList<LocationInfoEntity> mDataSet = GlobalVariables.savedLocations;
     private Context mContext;
+    private Activity mActivity;
 
 
 
-
-
-   public SavedLocationsAdapter(Context context) {
+    public SavedLocationsAdapter(Context context,Activity activity) {
+       if(mDataSet == null) {
+           mDataSet = new ArrayList<LocationInfoEntity>();
+       }
        Iterator<LocationInfoEntity> iterator = mDataSet.iterator();
        mContext = context;
+        mActivity = activity;
        while (iterator.hasNext()) {
            LocationInfoEntity currentLocation = iterator.next();
            //&markers=color:blue%7Clabel:S%7C40.702147,-74.015794
@@ -53,20 +56,29 @@ public class SavedLocationsAdapter extends RecyclerView.Adapter<SavedLocationsAd
                            300 + "x" + 360 + "&zoom=16&markers=color:blue%7Clabel:A%7C" + currentLocation.getLatitude() + "," +currentLocation.getLongitude() );
                    Log.d("Context", "GlobalConstants.STATIC_MAP_URL+currentLocation.getLatitude()+\",\"+currentLocation.getLongitude()+\"&size=400x400\"");
        }
+
    }
 
-    public static class CurrentViewHolder extends RecyclerView.ViewHolder {
+    public static class CurrentViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mLocationDescriptionTextView;
         private ImageView mLocationImageView;
+        private LocationInfoEntity mItem;
+        private MapOnClickListener mListener;
 
-        public CurrentViewHolder(View v) {
+        public CurrentViewHolder(View v,MapOnClickListener listener) {
             super(v);
-
+            mListener = listener;
             mLocationDescriptionTextView = (TextView)v.findViewById(R.id.description_textView);
             mLocationImageView = (ImageView)v.findViewById(R.id.saved_location_image);
+            v.setOnClickListener(this);
+
 
         }
 
+        @Override
+        public void onClick(View v) {
+            mListener.itemTapped(mItem);
+        }
     }
 
 
@@ -80,6 +92,7 @@ public class SavedLocationsAdapter extends RecyclerView.Adapter<SavedLocationsAd
         currentViewHolder.mLocationDescriptionTextView.setTypeface(typeFace);
         currentViewHolder.mLocationDescriptionTextView.setTextColor(Color.parseColor("#858585"));
         currentViewHolder.mLocationImageView.setImageBitmap(savedLocationInfo.mapImage);
+        currentViewHolder.mItem = savedLocationInfo;
 
 
     }
@@ -97,7 +110,17 @@ public class SavedLocationsAdapter extends RecyclerView.Adapter<SavedLocationsAd
         View v = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.saved_location_cardview_layout, viewGroup, false);
 
-        CurrentViewHolder vh = new CurrentViewHolder(v);
+        CurrentViewHolder vh = new CurrentViewHolder(v,new MapOnClickListener() {
+            @Override
+            public void itemTapped(LocationInfoEntity locationInfoEntity) {
+                Intent intent = new Intent(mActivity, MapsActivity.class);
+                intent.putExtra("latitude",locationInfoEntity.getLatitude());
+                intent.putExtra("longitude",locationInfoEntity.getLongitude());
+                intent.putExtra("locationDescription",locationInfoEntity.getLocationDescription());
+                mActivity.startActivity(intent);
+            }
+
+        });
         return vh;
     }
 }

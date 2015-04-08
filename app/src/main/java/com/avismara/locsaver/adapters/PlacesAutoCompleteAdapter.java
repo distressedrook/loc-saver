@@ -1,7 +1,6 @@
 package com.avismara.locsaver.adapters;
 
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -14,13 +13,11 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.avismara.locsaver.entities.LocationInfoEntity;
-import com.avismara.locsaver.utils.GlobalConstants;
-import com.google.android.gms.location.places.Places;
+import com.avismara.locsaver.miscellaneous.GlobalConstants;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.io.InputStreamReader;

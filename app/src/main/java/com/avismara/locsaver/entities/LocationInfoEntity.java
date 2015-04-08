@@ -3,9 +3,6 @@ package com.avismara.locsaver.entities;
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.avismara.locsaver.utils.GlobalConstants;
-import com.avismara.locsaver.utils.Utils;
-
 import java.io.Serializable;
 
 /**

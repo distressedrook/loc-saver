@@ -1,4 +1,4 @@
-package com.avismara.locsaver.utils;
+package com.avismara.locsaver.miscellaneous;
 
 import android.app.Service;
 import android.content.Intent;
@@ -19,7 +19,7 @@ public class SwipeKillDetectorService extends Service {
     public void onCreate() {
         Log.d("TestLogger","Service Started");
         GlobalVariables.savedLocations = ObjectSaver.readSavedLocationsFromFile(getApplicationContext());
-        Log.d("Saver",GlobalVariables.savedLocations.toString());
+
 
     }
 

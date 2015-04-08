@@ -11,8 +11,8 @@ import android.widget.TextView;
 import android.content.Context;
 
 import com.avismara.locsaver.R;
-import com.avismara.locsaver.utils.GlobalConstants;
-import com.avismara.locsaver.utils.SwipeKillDetectorService;
+import com.avismara.locsaver.miscellaneous.GlobalConstants;
+import com.avismara.locsaver.miscellaneous.SwipeKillDetectorService;
 
 
 public class HomeActivity extends Activity {
@@ -59,6 +59,7 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent showMapsActivityIntent = new Intent(context,MapsActivity.class);
+                showMapsActivityIntent.putExtra("locationDescription","HSR Layout");
                 startActivity(showMapsActivityIntent);
             }
         });

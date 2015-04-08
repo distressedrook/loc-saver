@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -23,51 +21,50 @@ import com.avismara.locsaver.R;
 import com.avismara.locsaver.adapters.PlacesAutoCompleteAdapter;
 import com.avismara.locsaver.asynctasks.GeoCodeAsyncTask;
 import com.avismara.locsaver.entities.LocationInfoEntity;
-import com.avismara.locsaver.utils.GlobalVariables;
-import com.avismara.locsaver.utils.SwipeKillDetectorService;
-import com.avismara.locsaver.utils.Utils;
-import com.google.android.gms.location.places.Place;
+import com.avismara.locsaver.miscellaneous.SwipeKillDetectorService;
+import com.avismara.locsaver.miscellaneous.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.Calendar;
 
 
-public class MapsActivity extends FragmentActivity implements  LocationListener,GoogleMap.OnMapClickListener,GoogleMap.OnMarkerDragListener {
+
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnMapClickListener,GoogleMap.OnMarkerDragListener,LocationSource.OnLocationChangedListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private AutoCompleteTextView mAutoCompleteTextView;
-    private LocationListener mLocationListener;
-    private LocationManager mLocationManager;
     private LocationInfoEntity currentSelectedLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setupAutoCompleteTextView();
-        setUpMapIfNeeded(12.9100,77.64);
+
+        Double latitude = getIntent().getDoubleExtra("latitude",12.9100);
+        Double longitude = getIntent().getDoubleExtra("longitude",77.64);
+
+
+
+           String locationDescription = getIntent().getStringExtra("locationDescription");
+
+        setUpMapIfNeeded(latitude,longitude,locationDescription);
         startService(new Intent(this, SwipeKillDetectorService.class));
     }
 
-    private void getLocation() {
-        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-
-    }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("TestLogger","Latitude:" + location.getLatitude() + "\nLongitude" + location.getLongitude());
-        mLocationManager.removeUpdates(this);
+
     }
 
-    private void setupMap(Double latitude,Double longitude) {
+    private void setupMap(Double latitude,Double longitude,String snippet) {
         CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(latitude,longitude));
         CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
         mMap.moveCamera(center);
@@ -75,7 +72,8 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
         mMap.clear();
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.draggable(true);
-        markerOptions.position(new LatLng(latitude,longitude));
+        markerOptions.position(new LatLng(latitude, longitude));
+        markerOptions.title(snippet);
         mMap.addMarker(markerOptions);
     }
     private void setupAutoCompleteTextView() {
@@ -100,7 +98,7 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
     public void handleGeoCodeAsyncTaskCallback(LocationInfoEntity locationInfoEntity) {
         Log.d("TestLogger", "Latitude:" + locationInfoEntity.getLatitude() + "\nLongitude" + locationInfoEntity.getLongitude());
         if(locationInfoEntity.getLatitude() != null && locationInfoEntity.getLongitude() != null) {
-            setupMap(locationInfoEntity.getLatitude(), locationInfoEntity.getLongitude());
+            setupMap(locationInfoEntity.getLatitude(), locationInfoEntity.getLongitude(),locationInfoEntity.getLocationDescription());
         } else {
             Utils.showToast("Unable to get geocodes",this);
         }
@@ -114,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
     /**
      * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
      * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setupMap(Double, Double)} ()} once when {@link #mMap} is not null.
+     * call {@link #setupMap(Double, Double,String)} ()} once when {@link #mMap} is not null.
      * <p/>
      * If it isn't installed {@link SupportMapFragment} (and
      * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
@@ -126,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
      * stopped or paused), {@link #onCreate(Bundle)} may not be called again so we should call this
      * method in {@link #onResume()} to guarantee that it will be called.
      */
-    private void setUpMapIfNeeded(Double latitude,Double longitude) {
+    private void setUpMapIfNeeded(Double latitude,Double longitude,String locationDescription) {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
@@ -137,8 +135,8 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
                 currentSelectedLocation = new LocationInfoEntity();
                 currentSelectedLocation.setLatitude(latitude);
                 currentSelectedLocation.setLongitude(longitude);
-                currentSelectedLocation.setLocationDescription("HSR Layout");
-                setupMap(latitude,longitude);
+                currentSelectedLocation.setLocationDescription(locationDescription);
+                setupMap(latitude, longitude, locationDescription);
                 mMap.setOnMarkerDragListener(this);
                 mMap.setOnMapClickListener(this);
 
@@ -202,9 +200,9 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
 
             Log.d("Tag",currentSelectedLocation.getLocationDescription());
         } catch (IOException e) {
-
+            currentSelectedLocation.setLocationDescription("Unknown Location");
         } catch (IndexOutOfBoundsException e) {
-
+            currentSelectedLocation.setLocationDescription("Unknown Location");
         } catch (Exception e) {
             currentSelectedLocation.setLocationDescription("Unknown Location");
         }
@@ -227,6 +225,7 @@ public class MapsActivity extends FragmentActivity implements  LocationListener,
         currentSelectedLocation = new LocationInfoEntity();
         currentSelectedLocation.setLatitude(point.latitude);
         currentSelectedLocation.setLongitude(point.longitude);
+        markerOptions.snippet(currentSelectedLocation.getLocationDescription());
         Utils.showToast((CharSequence)("GeoCode: Lat - " + point.latitude + "\nLong - "+point.longitude),this);
         try {
             Address address =  geocoder.getFromLocation(point.latitude,point.longitude, 1).get(0);

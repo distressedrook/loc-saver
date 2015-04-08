@@ -1,21 +1,17 @@
 package com.avismara.locsaver.activities;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.avismara.locsaver.R;
 import com.avismara.locsaver.adapters.SavedLocationsAdapter;
 import com.avismara.locsaver.libraries.SwipeableRecyclerViewTouchListener;
-import com.avismara.locsaver.utils.GlobalConstants;
-import com.avismara.locsaver.utils.GlobalVariables;
+import com.avismara.locsaver.miscellaneous.GlobalConstants;
+import com.avismara.locsaver.miscellaneous.GlobalVariables;
 
 public class SavedLocationsActivity extends FragmentActivity {
 
@@ -40,7 +36,7 @@ public class SavedLocationsActivity extends FragmentActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new SavedLocationsAdapter(this);
+        mAdapter = new SavedLocationsAdapter(this,this);
         mRecyclerView.setAdapter(mAdapter);
 
         Typeface typeFace = Typeface.createFromAsset(getAssets(), GlobalConstants.OPEN_SANS_SEMI_BOLD);
@@ -79,6 +75,9 @@ public class SavedLocationsActivity extends FragmentActivity {
 
     }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAdapter.notifyDataSetChanged();
+    }
 }

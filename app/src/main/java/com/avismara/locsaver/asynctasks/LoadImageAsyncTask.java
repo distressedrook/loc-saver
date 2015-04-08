@@ -7,7 +7,7 @@ import android.util.Log;
 
 import com.avismara.locsaver.adapters.SavedLocationsAdapter;
 import com.avismara.locsaver.entities.LocationInfoEntity;
-import com.avismara.locsaver.utils.Utils;
+import com.avismara.locsaver.miscellaneous.Utils;
 
 public class LoadImageAsyncTask extends AsyncTask<String, String, Bitmap> {
 
@@ -23,7 +23,7 @@ public class LoadImageAsyncTask extends AsyncTask<String, String, Bitmap> {
          mAdapter = adapter;
      }
 
-    // PARAM[0] IS IMG URL
+
     protected Bitmap doInBackground(String... param) {
         Log.i("ImageLoadTask", "Attempting to load image URL: " + param[0]);
         try {
@@ -35,17 +35,14 @@ public class LoadImageAsyncTask extends AsyncTask<String, String, Bitmap> {
         }
     }
 
-    protected void onProgressUpdate(String... progress) {
-        // NO OP
-    }
+
 
     protected void onPostExecute(Bitmap ret) {
         if (ret != null) {
 
             mLocationInfoEntity.mapImage = ret;
             if (mAdapter != null) {
-                // WHEN IMAGE IS LOADED NOTIFY THE ADAPTER
-                mAdapter.notifyDataSetChanged();
+               mAdapter.notifyDataSetChanged();
             }
         } else {
 
